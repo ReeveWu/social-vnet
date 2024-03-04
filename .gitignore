@@ -1,4 +1,4 @@
 .env
-test.ipynb
+**/test.ipynb
 **/__pycache__
 **/.DS_Store
