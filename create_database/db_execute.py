@@ -27,13 +27,14 @@ if __name__ == "__main__":
 
     truncate(conn)
 
-    df = pd.read_csv('../data/movie_data.csv')
+    df = pd.read_csv('../data/movie_data_filtered.csv')
     data = df.to_dict(orient='records')
+    print("Total:", len(data))
     for d in data:
         try:
             insert(conn=conn, 
-                movie_title=d['title'], 
-                overview=d['overview'], 
+                movie_title=d['title'].strip(), 
+                overview=d['overview'].strip(), 
                 genres=d['genres'], 
                 acting=d['acting'], 
                 directing=d['directing']
@@ -42,6 +43,8 @@ if __name__ == "__main__":
             print(f"Error: {e}")
             
     conn.close()
+
+    print("Done!")
 
     while True:
         time.sleep(1)
