@@ -16,16 +16,15 @@ class Neo4jConnection:
         if self.__driver is not None:
             self.__driver.close()
         
-    def create_movie_graph(self, movie_title, overview, genres, acting, directing):
+    def create_movie_graph(self, movie_title, overview, genres, directing):
         with self.__driver.session() as session:
-            result = session.write_transaction(self._create_and_return_movie, movie_title, overview, genres, acting, directing)
+            result = session.write_transaction(self._create_and_return_movie, movie_title, overview, genres, directing)
             print("Created movie graph for:", result)
     
     @staticmethod
-    def _create_and_return_movie(tx, movie_title, overview, genres, acting, directing):
+    def _create_and_return_movie(tx, movie_title, overview, genres, directing):
         overview = overview if overview else "No overview provided"
         genres = genres if genres else []
-        acting = acting if acting else []
         directing = directing if directing else []
         
         query = (
@@ -33,15 +32,12 @@ class Neo4jConnection:
             "FOREACH (genre in $genres | "
             "   MERGE (g:Genre {name: genre}) "
             "   MERGE (m)-[:HAS_GENRE]->(g)) "
-            "FOREACH (actor in $acting | "
-            "   MERGE (a:Actor {name: actor}) "
-            "   MERGE (m)-[:HAS_ACTOR]->(a)) "
             "FOREACH (director in $directing | "
             "   MERGE (d:Director {name: director}) "
             "   MERGE (m)-[:HAS_DIRECTOR]->(d)) "
             "RETURN m.title AS title"
         )
-        result = tx.run(query, movie_title=movie_title, overview=overview, genres=genres, acting=acting, directing=directing)
+        result = tx.run(query, movie_title=movie_title, overview=overview, genres=genres, directing=directing)
         return result.single()[0]
     
     def delete_all(self):
