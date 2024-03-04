@@ -40,10 +40,39 @@ class Neo4jConnection:
         result = tx.run(query, movie_title=movie_title, overview=overview, genres=genres, directing=directing)
         return result.single()[0]
     
+    def create_social_graph(self, user_id, movie_title):
+        with self.__driver.session() as session:
+            result = session.write_transaction(self._create_and_return_social, user_id, movie_title)
+            print("Created social graph for:", result)
+
+    @staticmethod
+    def _create_and_return_social(tx, user_id, movie_title):
+        query = (
+            "MERGE (u:User {user_id: $user_id}) "
+            "WITH u "
+            "MATCH (m:Movie {title: $movie_title}) "
+            "MERGE (u)-[:HAS_WATCHED]->(m) "
+            "RETURN u.user_id AS user_id"
+        )
+        result = tx.run(query, movie_title=movie_title, user_id=user_id)
+        return result.single()[0]
+    
     def delete_all(self):
         with self.__driver.session() as session:
             session.write_transaction(self._delete_all_nodes_and_relations)
             print("Deleted all nodes and relations.")
+    
+    def delete_all_users(self):
+        with self.__driver.session() as session:
+            session.write_transaction(self._delete_all_users)
+
+    @staticmethod
+    def _delete_all_users(tx):
+        query = (
+            "MATCH (u:User)-[r:HAS_WATCHED]->() "
+            "DELETE u, r"
+        )
+        tx.run(query)
 
     @staticmethod
     def _delete_all_nodes_and_relations(tx):
