@@ -2,3 +2,4 @@ python-dotenv
 requests
 pandas
 neo4j
+matplotlib
