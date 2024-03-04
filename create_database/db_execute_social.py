@@ -28,6 +28,8 @@ if __name__ == "__main__":
     print("Total:", len(data))
     for i, d in enumerate(data):
         print(f"Round: {i}/{len(data)}")
+        if movie_title_dict.get(d['title'], None) is None:
+            continue
         try:
             insert(conn=conn, 
                 user_id=d['user_id'].strip(),

@@ -42,15 +42,17 @@ class Neo4jConnection:
     
     def create_social_graph(self, user_id, movie_title):
         with self.__driver.session() as session:
-            result = session.write_transaction(self._create_and_return_social, user_id, movie_title)
-            print("Created social graph for:", result)
+            session.write_transaction(self._create_and_return_social, user_id, movie_title)
 
     @staticmethod
     def _create_and_return_social(tx, user_id, movie_title):
         query = (
             "MERGE (u:User {user_id: $user_id}) "
             "WITH u "
-            "MATCH (m:Movie {title: $movie_title}) "
+            "OPTIONAL MATCH (u)-[r:HAS_WATCHED]->(existingMovie:Movie) "
+            "WHERE existingMovie.title <> $movie_title OR existingMovie IS NULL "
+            "DELETE r "
+            "MERGE (m:Movie {title: $movie_title}) "
             "MERGE (u)-[:HAS_WATCHED]->(m) "
             "RETURN u.user_id AS user_id"
         )
