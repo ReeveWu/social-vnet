@@ -79,4 +79,4 @@ def query_graph(user_input):
         )
     chain.cypher_generation_chain.prompt.input_variables = ["question", "schema"]
     result = chain(user_input)
-    return result['result'], result['intermediate_steps'][0]['query']
+    return result['result'], result['intermediate_steps'][0]['query'], result['intermediate_steps'][1]['context']
