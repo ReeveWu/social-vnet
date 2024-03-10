@@ -6,3 +6,4 @@ matplotlib
 streamlit
 streamlit_chat
 langchain
+gradio
