@@ -23,10 +23,12 @@ if __name__ == "__main__":
     df = pd.read_csv('../data/movie_data_filtered.csv')
     movie_title_dict = df.set_index('netflix_title')['title'].to_dict()
 
-    df = pd.read_csv('../data/user_record_filtered.csv')
+    df = pd.read_csv('../data/social_data_split/user_record_filtered_1.csv')
     data = df.to_dict(orient='records')
     print("Total:", len(data))
     for i, d in enumerate(data):
+        if i < 42592:
+            continue
         print(f"Round: {i}/{len(data)}")
         if movie_title_dict.get(d['title'], None) is None:
             continue

@@ -3,3 +3,6 @@ requests
 pandas
 neo4j
 matplotlib
+streamlit
+streamlit_chat
+langchain
