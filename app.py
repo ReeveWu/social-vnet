@@ -3,9 +3,6 @@ import random
 
 from module.llm import query_graph
 
-cypher_query_text = ""
-query_results_text = ""
-
 def respond(message, chat_history):
     bot_message, cypher_query_text, query_results_text = query_graph(message)
     chat_history.append((message, bot_message))
@@ -20,9 +17,9 @@ with gr.Blocks() as demo:
 
         with gr.Column(2):
             with gr.Row():
-                cypher_query = gr.Textbox(label="Cypher Query", lines=7, value=str(cypher_query_text))
+                cypher_query = gr.Textbox(label="Cypher Query", lines=7)
             with gr.Row():
-                query_results = gr.Textbox(label="Query Results", lines=10, value=str(query_results_text))
+                query_results = gr.Textbox(label="Query Results", lines=10)
         
         msg.submit(respond, [msg, chatbot], [msg, chatbot, cypher_query, query_results])
 
