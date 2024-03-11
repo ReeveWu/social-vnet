@@ -20,29 +20,31 @@ def truncate(conn):
 if __name__ == "__main__":
     conn = Neo4jConnection(uri, user, password)
 
-    df = pd.read_csv('../data/movie_data_filtered.csv')
-    movie_title_dict = df.set_index('netflix_title')['title'].to_dict()
+    conn.delete_all_users()
 
-    df = pd.read_csv('../data/social_data_split/user_record_filtered_1.csv')
-    data = df.to_dict(orient='records')
-    print("Total:", len(data))
-    for i, d in enumerate(data):
-        if i < 42592:
-            continue
-        print(f"Round: {i}/{len(data)}")
-        if movie_title_dict.get(d['title'], None) is None:
-            continue
-        try:
-            insert(conn=conn, 
-                user_id=d['user_id'].strip(),
-                movie_title=movie_title_dict[d['title']].strip(), 
-                )
-        except Exception as e:
-            print(f"Error: {e}")
+    # df = pd.read_csv('../data/movie_data_filtered.csv')
+    # movie_title_dict = df.set_index('netflix_title')['title'].to_dict()
+
+    # df = pd.read_csv('../data/social_data_split/user_record_filtered_1.csv')
+    # data = df.to_dict(orient='records')
+    # print("Total:", len(data))
+    # for i, d in enumerate(data):
+    #     if i < 42592:
+    #         continue
+    #     print(f"Round: {i}/{len(data)}")
+    #     if movie_title_dict.get(d['title'], None) is None:
+    #         continue
+    #     try:
+    #         insert(conn=conn, 
+    #             user_id=d['user_id'].strip(),
+    #             movie_title=movie_title_dict[d['title']].strip(), 
+    #             )
+    #     except Exception as e:
+    #         print(f"Error: {e}")
             
     conn.close()
 
     print("Done!")
 
-    while True:
-        time.sleep(1)
+    # while True:
+    #     time.sleep(1)
