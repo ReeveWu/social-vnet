@@ -22,6 +22,12 @@ Each node type is represented in a unique way and connected through relationship
 
 ### Graph Database Example
 
+| Node Color | Node Type  |
+| ---------- | ---------- |
+| Deep Blue  | `Movie`    |
+| Sky Blue   | `Genre`    |
+| Yellow     | `Director` |
+
 ![Graph Database](./asset/movie_graph_db.png)
 
 ## Demo
